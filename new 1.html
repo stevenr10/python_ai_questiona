@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question & Answer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #response {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ask a Question</h1>
+    <form onsubmit="askQuestion(event)">
+        <label for="question">Your Question:</label><br>
+        <input type="text" id="question" name="question"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <div id="response">
+        <!-- AI response will be displayed here -->
+    </div>
+
+    <script>
+        async function askQuestion(event) {
+            event.preventDefault();
+            const questionInput = document.getElementById('question');
+            const question = questionInput.value;
+
+            const response = await fetch('http://localhost:8000/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ question })
+            });
+
+            const data = await response.json();
+            displayResponse(data.answer);
+        }
+
+        function displayResponse(answer) {
+            const responseDiv = document.getElementById('response');
+            responseDiv.textContent = answer;
+        }
+    </script>
+</body>
+</html>
